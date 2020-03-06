@@ -39,4 +39,13 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
-
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+SELECT a.y, a.key, COUNT(*)
+FROM(
+SELECT YEAR(c4) AS y, keys AS key 
+FROM tbl0 
+LATERAL VIEW explode(c5) tbl0 AS keys) a
+GROUP BY a.y, a.key
+ORDER BY a.y ASC, a.key ASC;

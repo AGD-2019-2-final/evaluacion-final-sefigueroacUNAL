@@ -39,5 +39,13 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
-
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+SELECT r.result
+FROM(SELECT t.c1, concat_ws(':', collect_set(UPPER(t.c5))) AS result
+FROM(SELECT c1, c5
+FROM tbl0 
+LATERAL VIEW explode(c5) tbl0 AS c5) t
+GROUP BY t.c1) r;
 

@@ -14,3 +14,11 @@ fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+lines = LOAD 'data.tsv'
+    AS (c1:CHARARRAY, c2:BAG{t:(p:CHARARRAY)}, c3:MAP[]);
+FLAT = FOREACH lines GENERATE FLATTEN(c2), FLATTEN(c3);
+G = GROUP FLAT BY ($0, $1);
+CNT = FOREACH G GENERATE group, COUNT(FLAT);
+DUMP CNT;
+STORE CNT INTO './output' using PigStorage('\t');
+

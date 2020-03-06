@@ -20,3 +20,11 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+S = FOREACH u GENERATE STRSPLIT(birthday,'-') AS (T:TUPLE(y,m,d));
+SPL = FOREACH S GENERATE T.y;
+G = GROUP SPL BY $0;
+CNT = FOREACH G GENERATE group, COUNT(SPL);
+ORD = ORDER CNT BY $0;
+DUMP ORD;
+STORE ORD INTO './output' using PigStorage(',');
+

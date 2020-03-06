@@ -27,3 +27,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+F = FILTER u BY (firstname MATCHES '^Z.*') AND (color == 'blue');
+G = FOREACH F GENERATE firstname,color;
+DUMP G;
+STORE G INTO './output' using PigStorage('\t');

@@ -27,3 +27,9 @@ fs -rm -f -r output;
 -- 
 --  >>> Escriba su respuesta a partir de este punto <<<
 -- 
+lines = LOAD 'truck_event_text_partition.csv' using PigStorage(',')
+    AS (driverId:INT, truckId:INT, eventTime:CHARARRAY);
+
+LIM = LIMIT lines 10;
+ORD = ORDER LIM BY driverId,truckId,eventTime;
+STORE ORD INTO './output' using PigStorage(',');

@@ -29,4 +29,8 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+O = FOREACH u GENERATE *, ToDate(birthday,'yyyy-MM-dd') as D;
+O2 = FOREACH O GENERATE birthday, ToString(D,'yyyy'),ToString(D,'yy');
+O3 = LIMIT O2 5;
+STORE O3 INTO './output' using PigStorage(',');
 

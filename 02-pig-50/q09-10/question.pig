@@ -27,5 +27,9 @@
 -- 
 fs -rm -f -r output;
 --
+lines = LOAD 'data.csv' using PigStorage(',');
+CONC = FOREACH lines GENERATE CONCAT($1,'@',$2);
+DUMP CONC;
+STORE CONC INTO './output' using PigStorage('\t');
 
 
